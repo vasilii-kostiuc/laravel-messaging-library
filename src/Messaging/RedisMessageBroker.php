@@ -2,6 +2,8 @@
 
 namespace VasiliiKostiuc\LaravelMessagingLibrary;
 
+use Illuminate\Support\Facades\Redis;
+
 class RedisMessageBroker implements MessageBrokerInterface
 {
     public function __construct()
@@ -10,11 +12,18 @@ class RedisMessageBroker implements MessageBrokerInterface
 
     public function publish(string $channel, string $message, array $data = [])
     {
-        // TODO: Implement publish() method.
+        Redis::publish($channel, json_encode([
+                'message' => $message,
+                'data' => $data,
+            ]
+        ));
     }
 
     public function subscribe(string $channel, callable $callback): void
     {
-        // TODO: Implement subscribe() method.
+        Redis::subscribe([$channel], function ($message) use ($callback) {
+            $data = json_decode($message, true);
+            $callback($data['message'], $data['data']);
+        });
     }
 }
