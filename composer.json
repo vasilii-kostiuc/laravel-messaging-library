@@ -8,6 +8,13 @@
             "VasiliiKostiuc\\LaravelMessagingLibrary\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "VasiliiKostiuc\\LaravelMessagingLibrary\\MessagingServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
     "require": {}
 }

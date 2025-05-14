@@ -1,6 +1,6 @@
 <?php
 
-namespace VasiliiKostiuc\LaravelMessagingLibrary;
+namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 
 use Illuminate\Support\Facades\Redis;
 

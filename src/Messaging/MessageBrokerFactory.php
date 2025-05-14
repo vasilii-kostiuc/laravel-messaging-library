@@ -1,24 +1,29 @@
 <?php
 
-namespace VasiliiKostiuc\LaravelMessagingLibrary;
+namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 
-use Illuminate\Support\Facades\Config;
+use VasiliiKostiuc\LaravelMessagingLibrary\MessageBrokerInterface;
+use VasiliiKostiuc\LaravelMessagingLibrary\RabbitMQMessageBroker;
+use VasiliiKostiuc\LaravelMessagingLibrary\RedisMessageBroker;
 
 class MessageBrokerFactory
 {
+    protected string $brokerType;
 
-    public static function create(): MessageBrokerInterface
+    public function __construct(string $brokerType)
     {
-        $messagingBroker = Config::get('messaging.default');
+        $this->brokerType = $brokerType;
+    }
 
-        switch ($messagingBroker) {
+    public function create(): MessageBrokerInterface
+    {
+        switch ($this->brokerType) {
             case 'redis':
                 return new RedisMessageBroker();
             case 'rabbitmq':
                 return new RabbitMQMessageBroker();
             default:
-                throw new \InvalidArgumentException("Broker is not supported, Broker : ". $messagingBroker);
+                throw new \InvalidArgumentException("Unsupported broker: $this->defaultType");
         }
-
     }
 }
