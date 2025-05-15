@@ -22,6 +22,8 @@ class MessagingServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->publishes([
+            __DIR__.'/../config/messaging.php' => config_path('messaging.php'),
+        ]);
     }
 }
