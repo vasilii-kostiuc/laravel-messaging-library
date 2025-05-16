@@ -2,10 +2,6 @@
 
 namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 
-use VasiliiKostiuc\LaravelMessagingLibrary\MessageBrokerInterface;
-use VasiliiKostiuc\LaravelMessagingLibrary\RabbitMQMessageBroker;
-use VasiliiKostiuc\LaravelMessagingLibrary\RedisMessageBroker;
-
 class MessageBrokerFactory
 {
     protected string $brokerType;
