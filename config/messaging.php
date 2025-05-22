@@ -1,5 +1,5 @@
 <?php
-return [
-    'default' => env('MESSAGING_BROKER', 'redis')
-];
 
+return [
+    'default' => env('MESSAGING_BROKER', 'redis'),
+];

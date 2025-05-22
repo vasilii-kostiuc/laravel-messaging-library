@@ -12,7 +12,7 @@ class MessagingServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(MessageBrokerFactory::class, function ($app){
+        $this->app->singleton(MessageBrokerFactory::class, function ($app) {
             return new MessageBrokerFactory(config('messaging.default'));
         });
     }

@@ -8,10 +8,10 @@ use VasiliiKostiuc\LaravelMessagingLibrary\Messaging\RedisMessageBroker;
 
 class RedisMessageBrokerTest extends TestCase
 {
-    public function testPublish(): void
+    public function test_publish(): void
     {
         // Arrange
-        $broker = new RedisMessageBroker();
+        $broker = new RedisMessageBroker;
         $channel = 'test_channel';
         $message = 'test_message';
         $data = ['key' => 'value'];
@@ -21,7 +21,7 @@ class RedisMessageBrokerTest extends TestCase
             ->once()
             ->with($channel, json_encode([
                 'message' => $message,
-                'data' => $data
+                'data' => $data,
             ]))
             ->andReturn(1);
 

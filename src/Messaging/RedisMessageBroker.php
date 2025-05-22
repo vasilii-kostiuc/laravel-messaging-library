@@ -6,16 +6,14 @@ use Illuminate\Support\Facades\Redis;
 
 class RedisMessageBroker implements MessageBrokerInterface
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function publish(string $channel, string $message, array $data = [])
     {
         Redis::publish($channel, json_encode([
-                'message' => $message,
-                'data' => $data,
-            ]
+            'message' => $message,
+            'data' => $data,
+        ]
         ));
     }
 

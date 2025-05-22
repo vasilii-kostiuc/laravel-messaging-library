@@ -4,10 +4,7 @@ namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 
 class RabbitMQMessageBroker implements MessageBrokerInterface
 {
-
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function publish(string $channel, string $message, array $data = [])
     {

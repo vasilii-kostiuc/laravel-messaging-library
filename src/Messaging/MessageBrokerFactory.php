@@ -15,9 +15,9 @@ class MessageBrokerFactory
     {
         switch ($this->brokerType) {
             case 'redis':
-                return new RedisMessageBroker();
+                return new RedisMessageBroker;
             case 'rabbitmq':
-                return new RabbitMQMessageBroker();
+                return new RabbitMQMessageBroker;
             default:
                 throw new \InvalidArgumentException("Unsupported broker: $this->defaultType");
         }
