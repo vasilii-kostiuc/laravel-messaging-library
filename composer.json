@@ -17,5 +17,8 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "react/socket": "^1.16",
+        "react/event-loop": "^1.3"
+    }
 }
