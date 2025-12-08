@@ -4,6 +4,7 @@ namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 
 use Clue\React\Redis\Client;
 use Clue\React\Redis\Factory;
+use Illuminate\Support\Facades\Log;
 use React\EventLoop\LoopInterface;
 
 class RedisMessageBroker implements MessageBrokerInterface
@@ -103,10 +104,12 @@ class RedisMessageBroker implements MessageBrokerInterface
                 $this->attachMessageHandler();
                 $this->subscribeClient->subscribe($channel);
                 echo "Subscribed to channel: {$channel}\n";
+                Log::info("Subscribed to channel: {$channel}\n");
             });
         } else {
             $this->subscribeClient->subscribe($channel);
-            echo "Subscribed to channel: {$channel}\n";
+            echo "Subscribed to   channel: {$channel}\n";
+            Log::info("Subscribed   to channel: {$channel}\n");
         }
     }
 }
