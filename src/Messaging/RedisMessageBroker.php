@@ -75,22 +75,31 @@ class RedisMessageBroker implements MessageBrokerInterface
     {
         if ($this->publishClient === null) {
             $factory = new Factory($this->loop);
-            $factory->createClient("redis://{$this->host}:{$this->port}")->then(function (Client $client) use ($channel, $message, $data) {
-                $this->publishClient = $client;
-                $this->doPublish($channel, $message, $data);
-            });
+            // Дожидаемся подключения И публикации
+            $promise = $factory->createClient("redis://{$this->host}:{$this->port}")
+                ->then(function (Client $client) use ($channel, $message, $data) {
+                    $this->publishClient = $client;
+                    return $this->doPublish($channel, $message, $data);
+                });
+
+            // Теперь await блокирует весь HTTP-запрос до завершения
+            \React\Async\await($promise);
         } else {
-            $this->doPublish($channel, $message, $data);
+            // Уже подключены, просто публикуем и ждём
+            $promise = $this->doPublish($channel, $message, $data);
+            \React\Async\await($promise);
         }
     }
 
-    private function doPublish(string $channel, string $message, array $data): void
+    private function doPublish(string $channel, string $message, array $data): mixed
     {
         $payload = json_encode([
             'message' => $message,
             'data' => $data,
         ]);
-        $this->publishClient->publish($channel, $payload);
+
+        return $this->publishClient->publish($channel, $payload);
+
     }
 
     public function subscribe(string $channel, callable $callback): void
