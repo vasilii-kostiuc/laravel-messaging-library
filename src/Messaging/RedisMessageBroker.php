@@ -5,6 +5,7 @@ namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 use Clue\React\Redis\Client;
 use Clue\React\Redis\Factory;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use React\EventLoop\LoopInterface;
 
 class RedisMessageBroker implements MessageBrokerInterface
@@ -73,6 +74,8 @@ class RedisMessageBroker implements MessageBrokerInterface
 
     public function publish(string $channel, string $message, array $data = []): void
     {
+        $this->doPublish($channel, $message, $data);
+        return;
         if ($this->publishClient === null) {
             $factory = new Factory($this->loop);
             // Дожидаемся подключения И публикации
@@ -98,7 +101,8 @@ class RedisMessageBroker implements MessageBrokerInterface
             'data' => $data,
         ]);
 
-        return $this->publishClient->publish($channel, $payload);
+        return Redis::publish($channel, $payload);
+        //return $this->publishClient->publish($channel, $payload);
 
     }
 
