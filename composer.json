@@ -2,6 +2,7 @@
   "name": "vasilii-kostiuc/laravel-messaging-library",
   "description": "A messaging library for handling message brokers initialy developed for dictionary project",
   "type": "library",
+  "version": "1.2.0",
   "license": "MIT",
   "autoload": {
     "psr-4": {
