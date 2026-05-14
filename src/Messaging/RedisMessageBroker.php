@@ -4,14 +4,11 @@ namespace VasiliiKostiuc\LaravelMessagingLibrary\Messaging;
 
 use Clue\React\Redis\Client;
 use Clue\React\Redis\Factory;
-use Illuminate\Support\Facades\Redis;
 use React\EventLoop\LoopInterface;
 
 class RedisMessageBroker implements MessageBrokerInterface
 {
     private LoopInterface $loop;
-
-    private ?Client $publishClient = null;
 
     private ?Client $subscribeClient = null;
 
@@ -28,18 +25,6 @@ class RedisMessageBroker implements MessageBrokerInterface
         $this->loop = $loop;
         $this->host = $host;
         $this->port = $port;
-    }
-
-    private function connectPublish(): void
-    {
-        if ($this->publishClient !== null) {
-            return;
-        }
-
-        $factory = new Factory($this->loop);
-        $factory->createClient("redis://{$this->host}:{$this->port}")->then(function (Client $client) {
-            $this->publishClient = $client;
-        });
     }
 
     private function connectSubscribe(): void
@@ -78,37 +63,22 @@ class RedisMessageBroker implements MessageBrokerInterface
     public function publish(string $channel, string $message, array $data = []): void
     {
         $this->doPublish($channel, $message, $data);
-
-        return;
-        if ($this->publishClient === null) {
-            $factory = new Factory($this->loop);
-            // Дожидаемся подключения И публикации
-            $promise = $factory->createClient("redis://{$this->host}:{$this->port}")
-                ->then(function (Client $client) use ($channel, $message, $data) {
-                    $this->publishClient = $client;
-
-                    return $this->doPublish($channel, $message, $data);
-                });
-
-            // Теперь await блокирует весь HTTP-запрос до завершения
-            \React\Async\await($promise);
-        } else {
-            // Уже подключены, просто публикуем и ждём
-            $promise = $this->doPublish($channel, $message, $data);
-            \React\Async\await($promise);
-        }
     }
 
-    private function doPublish(string $channel, string $message, array $data): mixed
+    private function doPublish(string $channel, string $message, array $data): void
     {
         $payload = json_encode([
             'message' => $message,
             'data' => $data,
         ]);
 
-        return Redis::publish($channel, $payload);
-        // return $this->publishClient->publish($channel, $payload);
+        $redis = new \Predis\Client([
+            'scheme' => 'tcp',
+            'host' => $this->host,
+            'port' => $this->port,
+        ]);
 
+        $redis->publish($channel, $payload);
     }
 
     private array $pendingSubscriptions = [];

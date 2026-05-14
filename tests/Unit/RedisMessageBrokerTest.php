@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Support\Facades\Redis;
 use React\EventLoop\Loop;
 use Tests\TestCase;
 use VasiliiKostiuc\LaravelMessagingLibrary\Messaging\RedisMessageBroker;
@@ -12,7 +11,7 @@ class RedisMessageBrokerTest extends TestCase
     public function test_publish(): void
     {
         $loop = Loop::get();
-        $broker = new RedisMessageBroker($loop, 'redis', 6379);
+        $broker = new RedisMessageBroker($loop, (string) (getenv('REDIS_HOST') ?: '127.0.0.1'), (int) (getenv('REDIS_PORT') ?: 6379));
         $channel = 'test_channel';
         $message = 'test_message';
         $data = ['key' => 'value'];
